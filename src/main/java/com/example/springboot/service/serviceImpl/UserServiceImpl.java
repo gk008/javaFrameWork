@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
 
+    //拿到所有用户
     @Override
     public List<User> getUsers() {
         UserExample userExample = new UserExample();
@@ -33,11 +34,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByExample(userExample);
     }
 
+    //根据用户id查找用户
     @Override
     public User getUser(Integer id) {
         return userMapper.selectByPrimaryKey(id);
     }
 
+    //根据手机号码查找用户
     @Override
     public User getUser(String phoneNumber) {
         UserExample userExample = new UserExample();
@@ -50,12 +53,24 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    //添加一个用户
     @Override
     public User addUser(User user) {
         userMapper.insertSelective(user);
         return getUser(user.getPhonenumber());
     }
 
+    /**
+     * 登录
+     *
+     * @param phoneNumber
+     * @param password
+     * @param request
+     * @param response
+     * @return 返回json串
+     * int code：消息代码 0表示登录成功 1表示密码错误 2表示用户不存在 3 表示号码不合法
+     * String message：消息内容
+     */
     @Override
     public String login(String phoneNumber, String password,
                         HttpServletRequest request, HttpServletResponse response) {
@@ -66,12 +81,12 @@ public class UserServiceImpl implements UserService {
             User user = getUser(phoneNumber);
             if (user != null) {
                 if (password.equals(user.getPassword())) {
-                    Integer id = user.getId();
-                    jsonObject.put("userid", id);
+                    jsonObject.put("userid", user.getId());
                     request.getSession().setAttribute("user", user);
                     Cookie cookie = new Cookie("token",
                             TokenUtil.getLoginToken(phoneNumber, user.getId()));
                     cookie.setPath("/");
+                    cookie.setMaxAge(15 * 60 * 1000);
                     response.addCookie(cookie);
                 } else {
                     code = 1;
@@ -90,6 +105,16 @@ public class UserServiceImpl implements UserService {
         return jsonObject.toJSONString();
     }
 
+    /**
+     * 注册 注册成功同时在userinfo表中插入一条与之匹配的新纪录
+     * @param phoneNumber
+     * @param password
+     * @param request
+     * @param response
+     * @return 返回json串
+     *          int code：消息码 0表示注册成功 1表示号码已注册 2表示号码不合法
+     *          String message：消息内容
+     */
     @Override
     public String register(String phoneNumber, String password,
                            HttpServletRequest request, HttpServletResponse response) {
@@ -112,11 +137,11 @@ public class UserServiceImpl implements UserService {
                 UserInfoService userInfoService = SpringContextHolder.getBean("userInfoService");
                 userInfoService.saveUserInfo(userinfo);
             } else {
-                code = 2;
+                code = 1;
                 message = "该号码已注册";
             }
         } else {
-            code = 3;
+            code = 2;
             message = "请输入合法的电话号码";
         }
         jsonObject.put("code", code);
@@ -124,6 +149,12 @@ public class UserServiceImpl implements UserService {
         return jsonObject.toJSONString();
     }
 
+    /**
+     * 注销
+     * @param request
+     * @param response
+     * @return 仅返回"已注销"字符串
+     */
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
@@ -139,6 +170,17 @@ public class UserServiceImpl implements UserService {
         return "已注销";
     }
 
+    /**
+     * 修改密码
+     * @param id 用户id
+     * @param oldPassword
+     * @param newPassword
+     * @param request
+     * @param response
+     * @return 返回json串
+     *          int code：消息码 0表示修改成功 1表示不存在该用户 2表示旧密码不符
+     *          String message：消息内容
+     */
     @Override
     public String changePassword(Integer id, String oldPassword, String newPassword,
                                  HttpServletRequest request, HttpServletResponse response) {
@@ -157,13 +199,18 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             code = 1;
-            message = "修改失败";
+            message = "不存在该用户";
         }
         jsonObject.put("code", code);
         jsonObject.put("message", message);
         return jsonObject.toJSONString();
     }
 
+    /**
+     * 暂未实现
+     * 修改绑定手机
+     * @return
+     */
     @Override
     public String changePhoneNumber() {
         return null;

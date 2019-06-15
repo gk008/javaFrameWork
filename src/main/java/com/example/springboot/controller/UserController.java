@@ -15,6 +15,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    //登录
     @PostMapping("/login")
     public String login(@RequestParam("phonenumber") String phoneNumber,
                         @RequestParam("password") String password,
@@ -22,6 +23,7 @@ public class UserController {
         return userService.login(phoneNumber, password, request, response);
     }
 
+    //注册
     @PostMapping("/register")
     public String register(@RequestParam("phonenumber") String phoneNumber,
                            @RequestParam("password") String password,
@@ -29,11 +31,13 @@ public class UserController {
         return userService.register(phoneNumber, password, request, response);
     }
 
+    //注销
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         return userService.logout(request, response);
     }
 
+    //更换密码
     @PostMapping("/changepassword")
     public String changePassword(@RequestParam("oldpassword") String oldPassword,
                                  @RequestParam("newpassword") String newPassword,
@@ -42,6 +46,7 @@ public class UserController {
         return userService.changePassword(id, oldPassword, newPassword, request, response);
     }
 
+    //获取session中的user，测试用
     @GetMapping(value = "/main")
     public String main(HttpServletRequest request) {
         JSONObject jsonObject = new JSONObject();
@@ -49,6 +54,7 @@ public class UserController {
         return jsonObject.toJSONString();
     }
 
+    //获取请求中所有cookie，测试用
     @GetMapping(value = "/cookies")
     public String cookies(HttpServletRequest request) {
         JSONObject jsonObject = new JSONObject();

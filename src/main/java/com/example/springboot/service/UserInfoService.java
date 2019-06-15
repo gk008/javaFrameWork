@@ -8,8 +8,6 @@ public interface UserInfoService {
 
     public List<Userinfo> getUserInfos();
 
-    public Userinfo getUserInfoById(Integer id);
-
     public Userinfo getUserInfoByUid(Integer uid);
 
     public Userinfo saveUserInfo(Userinfo userinfo);

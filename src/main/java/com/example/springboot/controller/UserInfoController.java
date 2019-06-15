@@ -14,11 +14,13 @@ public class UserInfoController {
     @Autowired
     UserInfoService userInfoService;
 
+    //获取用户信息加手机号
     @PostMapping("/getUserinfo")
     public String getUserInfo(Integer uid) {
         return userInfoService.getUserInfo(uid);
     }
 
+    //修改用户信息
     @PostMapping("/changeUserinfo")
     public String changeUserInfo(Userinfo userinfo) {
         return userInfoService.changeUserInfo(userinfo);

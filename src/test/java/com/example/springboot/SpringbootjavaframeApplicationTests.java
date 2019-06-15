@@ -6,7 +6,6 @@ import com.example.springboot.entity.UserExample;
 import com.example.springboot.entity.Userinfo;
 import com.example.springboot.service.UserInfoService;
 import com.example.springboot.service.UserService;
-import com.example.springboot.service.serviceImpl.UserServiceImpl;
 import com.example.springboot.util.DataCheckUtil;
 import com.example.springboot.util.MD5Utils;
 import com.example.springboot.util.SpringContextHolder;
@@ -37,7 +36,7 @@ public class SpringbootjavaframeApplicationTests {
     @Test
     public void test03() {
         User user = null;
-        UserService userService = new UserServiceImpl();
+        UserService userService = SpringContextHolder.getBean("userService");
         user = userService.getUser("13377779999");
         System.out.println(user);
     }
