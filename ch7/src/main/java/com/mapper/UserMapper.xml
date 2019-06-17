@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserMapper">
+<select id = "selectUserById" parameterType="Integer" resultType="com.po.MyUser">
+	select * from user where uid = #{uid}
+</select>
+<select id = "selectAllUser" resultType="com.po.MyUser">
+	select * from user
+</select>
+<insert id="addUser" parameterType="com.po.MyUser">
+	insert into user(uname,usex)values(#{uname},#{usex})
+</insert>
+<update id="updateUser" parameterType="com.po.MyUser">
+		update user set uname=#{uname},usex=#{usex} where uid=#{uid}	
+</update>
+<delete id="deleteUser" parameterType="Integer">
+		delete from user where uid = #{uid}
+</delete>
+<resultMap type="com.mybatis.po.MyUser" id="userAndOrders1">
+<id property="uid" column="uid"/>
+<result property="uname" column="uname"/>
+<result property="usex" column="usex"/>
+<collection property="orderlist" ofType="com..po.Orders" column="uid" select="userAndOrders1"/>
+</resultMap>
+<select id="com.dao.OrdersDao.selectOrderById1" parameterType="Integer" resultMap="userAndOrders1">
+	select * from user where uid=#{id}
+</select>
+</mapper>
