@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="contetxt">
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/javaframe"
+                        password="12345678"
+                        userId="root">
+            <property name="characterEncoding" value="utf8"/>
+            <property name="useSSL" value="false"/>
+            <property name="serverTimezone" value="UTC"/>
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+        <javaModelGenerator targetPackage="com.example.springboot.entity"
+                            targetProject="src\main\java"/>
+        <sqlMapGenerator targetPackage="mybatis.mapper"
+                         targetProject="src\main\resources"/>
+        <javaClientGenerator targetPackage="com.example.springboot.dao"
+                             targetProject="src\main\java"
+                             type="XMLMAPPER"/>
+        <table tableName="user"/>
+        <table tableName="userinfo"/>
+        <table tableName="shopinfo"/>
+        <table tableName="shop_collect_user"/>
+        <table tableName="roomtypeinfo"/>
+        <table tableName="hotelinfo"/>
+        <table tableName="hotel_roomtype"/>
+        <table tableName="hotel_collect_user"/>
+        <table tableName="foodstyleinfo"/>
+        <table tableName="foodinfo"/>
+        <table tableName="comment_shop"/>
+        <table tableName="comment_hotel"/>
+        <table tableName="china"/>
+    </context>
+</generatorConfiguration>
